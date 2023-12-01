@@ -1,0 +1,411 @@
+{
+    "level_one":
+    {
+        "main_player":
+        {
+            "x": 30,
+            "y": 440,
+            "speed_walk": 4,
+            "speed_run": 8,
+            "gravity": 8,
+            "power_jump": 16,
+            "jump_height": 220,
+            "width_player": 120,
+            "height_player": 120
+        },
+        "platforms":
+        {
+            "common_width": 200,
+            "common_height": 40,
+            "platform_one":
+            {
+                "x": 380,
+                "y": 400
+            },
+            "platform_two":
+            {
+                "x": 100,
+                "y": 280
+            },
+            "platform_three":
+            {
+                "x": 650,
+                "y": 280
+            },
+            "platform_four":
+            {
+                "x": 380,
+                "y": 150
+            }
+        },
+        "coins":
+        {
+            "coin_one":
+            {
+                "x": 180,
+                "y": 220
+            },
+            "coin_two":
+            {
+                "x": 460,
+                "y": 350
+            },
+            "coin_three":
+            {
+                "x": 730,
+                "y": 220
+            },
+            "coin_four":
+            {
+                "x": 460,
+                "y": 100
+            },
+            "coin_five":
+            {
+                "x": 870,
+                "y": 480
+            }
+        },
+        "saws":
+        {
+            "saw_one":
+            {
+                "x": 100,
+                "y": 247
+            },
+            "saw_two":
+            {
+                "x": 650,
+                "y": 247
+            }
+        },
+        "enemies":
+        {
+            "common_height_and_width": 120,
+            "common_speed_walk": 0.6,
+            "common_gravity": 8,
+            "enemy_one":
+            {
+                "x": 935,
+                "y": 440
+            },
+            "enemy_two":
+            {
+                "x": 500,
+                "y": 440
+            }
+        }
+    },
+    "level_two":
+    {
+        "main_player":
+        {
+            "x": -30,
+            "y": 440,
+            "speed_walk": 4,
+            "speed_run": 8,
+            "gravity": 8,
+            "power_jump": 16,
+            "jump_height": 200,
+            "common_width_and_height_player": 120
+        },
+        "platforms":
+        {
+            "common_height": 40,
+            "platform_one":
+            {
+                "x": 0,
+                "y": 400,
+                "width": 600
+            },
+            "platform_two":
+            {
+                "x": 20,
+                "y": 320,
+                "width": 50
+            },
+            "platform_three":
+            {
+                "x": 900,
+                "y": 420,
+                "width": 100
+            },
+            "platform_four":
+            {
+                "x": 650,
+                "y": 275,
+                "width": 350
+            },
+            "platform_five":
+            {
+                "x": 150,
+                "y": 280,
+                "width": 250
+            },
+            "platform_six":
+            {
+                "x": 600,
+                "y": 140,
+                "width": 300
+            },
+            "platform_seven":
+            {
+                "x": 450,
+                "y": 200,
+                "width": 50
+            }
+        },
+        "coins":
+        {
+            "coin_one":
+            {
+                "x": 25,
+                "y":280
+            },
+            "coin_two":
+            {
+                "x": 460,
+                "y":350
+            },
+            "coin_three":
+            {
+                "x": 920,
+                "y":220
+            },
+            "coin_four":
+            {
+                "x": 455,
+                "y":150
+            },
+            "coin_five":
+            {
+                "x": 930,
+                "y":360
+            }
+        },
+        "saws":
+        {
+            "saw_one":
+            {
+                "x": 150,
+                "y": 367
+            },
+            "saw_two":
+            {
+                "x": 210,
+                "y": 367
+            },
+            "saw_three":
+            {
+                "x": 270,
+                "y": 367
+            },
+            "saw_four":
+            {
+                "x": 330,
+                "y": 367
+            },
+            "saw_five":
+            {
+                "x": 150,
+                "y": 248
+            },
+            "saw_six":
+            {
+                "x": 650,
+                "y": 242
+            },
+            "saw_seven":
+            {
+                "x": 710,
+                "y": 242
+            },
+            "saw_eight":
+            {
+                "x": 770,
+                "y": 242
+            },
+            "saw_nine":
+            {
+                "x": 830,
+                "y": 242
+            }
+        },
+        "enemies":
+        {
+            "common_height_and_width": 120,
+            "common_speed_walk": 0.6,
+            "common_gravity": 8,
+            "enemy_one":
+            {
+                "x": 935,
+                "y": 440
+            },
+            "enemy_two":
+            {
+                "x": 500,
+                "y": 280
+            }
+        }
+    },
+    "level_three":
+    {
+        "main_player":
+        {
+            "x": -30,
+            "y": 200,
+            "speed_walk": 4,
+            "speed_run": 8,
+            "gravity": 8,
+            "power_jump": 16,
+            "jump_height": 200,
+            "common_width_and_height_player": 120
+        },
+        "platforms":
+        {
+            "common_height": 40,
+            "platform_one":
+            {
+                "x": 0,
+                "y": 300,
+                "width": 800
+            },
+            "platform_two":
+            {
+                "x": 200,
+                "y": 200,
+                "width": 50
+            },
+            "platform_three":
+            {
+                "x": 400,
+                "y": 200,
+                "width": 50
+            },
+            "platform_four":
+            {
+                "x": 0,
+                "y": 100,
+                "width": 50
+            },
+            "platform_five":
+            {
+                "x": 900,
+                "y": 400,
+                "width": 100
+            }
+        },
+        "coins":
+        {
+            "coin_one":
+            {
+                "x": 5,
+                "y": 50
+            },
+            "coin_two":
+            {
+                "x": 205,
+                "y": 160
+            },
+            "coin_three":
+            {
+                "x": 405,
+                "y": 160
+            },
+            "coin_four":
+            {
+                "x": 470,
+                "y": 250
+            },
+            "coin_five":
+            {
+                "x": 660,
+                "y": 250
+            },
+            "coin_six":
+            {
+                "x": 930,
+                "y": 350
+            },
+            "coin_seven":
+            {
+                "x": 750,
+                "y": 470
+            },
+            "coin_eight":
+            {
+                "x": 500,
+                "y": 470
+            },
+            "coin_nine":
+            {
+                "x": 300,
+                "y": 470
+            },
+            "coin_ten":
+            {
+                "x": 100,
+                "y": 470
+            }
+        },
+        "saws":
+        {
+            "saw_one":
+            {
+                "x": 230,
+                "y": 268
+            },
+            "saw_two":
+            {
+                "x": 290,
+                "y": 268
+            },
+            "saw_three":
+            {
+                "x": 350,
+                "y": 268
+            },
+            "saw_four":
+            {
+                "x": 550,
+                "y": 268
+            },
+            "saw_five":
+            {
+                "x": 600,
+                "y": 495
+            },
+            "saw_six":
+            {
+                "x": 400,
+                "y": 495
+            },
+            "saw_seven":
+            {
+                "x": 200,
+                "y": 495
+            },
+            "saw_eight":
+            {
+                "x": 0,
+                "y": 495
+            }
+        },
+        "enemies":
+        {
+            "common_height_and_width": 120,
+            "common_speed_walk": 0.6,
+            "common_gravity": 8,
+            "enemy_one":
+            {
+                "x": 935,
+                "y": 440
+            },
+            "enemy_two":
+            {
+                "x": -20,
+                "y": 440
+            }
+        }
+    }
+}
