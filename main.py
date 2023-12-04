@@ -17,6 +17,9 @@ screen = pg.display.set_mode((width_window, height_window))
 #Tiempo
 clock = pg.time.Clock()
 
+#Ranking de jugadores
+ranking_dict = {"TEST": 1000, "TEST2": 10, "TEST3": 3000, "TEST4": 500}
+
 #Pantallas
 def settings(volume_music, volume_game):
     #Image
@@ -584,6 +587,12 @@ def winner(volume_music, volume_game, score):
     #Nombre de la ventana
     pg.display.set_caption("YOU ARE A WINNER!!!!")
 
+    # Obtener la última clave
+    last_key = list(ranking_dict.keys())[-1]
+
+    #Actualizar puntaje de jugador
+    ranking_dict[last_key] = score
+
     background_music.play()
     while True:
         background_music.set_volume(volume_music)
@@ -593,12 +602,16 @@ def winner(volume_music, volume_game, score):
 
         mouse_position = pg.mouse.get_pos()
 
-        score_text = (pg.font.Font(None, 30)).render(f"CONGRATULATIONS!! FINAL SCORE: {str(score)}", True, "#b68f40")
-        score_rect = score_text.get_rect(center=(750, 140))
+        name_text = (pg.font.Font(None, 30)).render(f"CONGRATULATIONS {last_key}!!", True, "#b68f40")
+        name_rect = name_text.get_rect(center=(750, 140))
+
+        score_text = (pg.font.Font(None, 30)).render(f"FINAL SCORE: {str(score)}", True, "#b68f40")
+        score_rect = score_text.get_rect(center=(694, 165))
 
 
         return_to_main_menu_button = Button(image=None, pos=(830,210), text_input="RETURN TO MAIN MENU", font=(pg.font.Font(None, 30)), base_color="black", hovering_color="White")
 
+        screen.blit(name_text, name_rect)
         screen.blit(score_text, score_rect)
         for button in [return_to_main_menu_button]:
             button.changecolor(mouse_position)
@@ -703,15 +716,15 @@ def select_level_window(volume_music, volume_game):
                 if level_one_button.checkforinput(mouse_position):
                     click_sound.play()
                     background_music.stop()
-                    play_game(volume_music, volume_game, 1, 0)
+                    enter_name(volume_music, volume_game, 1)
                 elif level_two__button.checkforinput(mouse_position):
                     click_sound.play()
                     background_music.stop()
-                    play_game(volume_music, volume_game, 2, 0)
+                    enter_name(volume_music, volume_game, 2)
                 elif level_three_button.checkforinput(mouse_position):
                     click_sound.play()
                     background_music.stop()
-                    play_game(volume_music, volume_game, 3, 0)
+                    enter_name(volume_music, volume_game, 3)
                 elif return_to_main_menu_button.checkforinput(mouse_position):
                     click_sound.play()
                     background_music.stop()
@@ -746,15 +759,16 @@ def main_menu(volume_music, volume_game):
         game_name_text = font.render("VIKINGS OF THE FUTURE", True, "#b68f40")
         rect_game_name = game_name_text.get_rect(center=(width_window / 2, 45))
 
-        play_button = Button(image=None, pos=(width_window / 2,210), text_input="PLAY", font=font, base_color="grey", hovering_color="White")
-        options_button = Button(image=None, pos=(width_window / 2,410), text_input="SETTINGS", font=font, base_color="grey", hovering_color="White")
+        play_button = Button(image=None, pos=(width_window / 2,170), text_input="PLAY", font=font, base_color="grey", hovering_color="White")
+        select_level_button = Button(image=None, pos=(width_window / 2,260), text_input="SELECT LEVEL", font=font, base_color="grey", hovering_color="White")
+        options_button = Button(image=None, pos=(width_window / 2,350), text_input="SETTINGS", font=font, base_color="grey", hovering_color="White")
+        ranking_button = Button(image=None, pos=(width_window / 2,440), text_input="RANKING", font=font, base_color="grey", hovering_color="White")
         quit_button = Button(image=None, pos=(width_window / 2,513), text_input="QUIT", font=font, base_color="grey", hovering_color="White")
-        select_level_button = Button(image=None, pos=(width_window / 2,310), text_input="SELECT LEVEL", font=font, base_color="grey", hovering_color="White")
 
         screen.blit(menu_text, menu_rect)
         screen.blit(game_name_text, rect_game_name)
 
-        for button in [play_button, options_button, quit_button, select_level_button]:
+        for button in [play_button, options_button, quit_button, select_level_button, ranking_button]:
             button.changecolor(mouse_position)
             button.update(screen)
         
@@ -766,7 +780,7 @@ def main_menu(volume_music, volume_game):
                 if play_button.checkforinput(mouse_position):
                     click_sound.play()
                     background_music.stop()
-                    play_game(volume_music, volume_game, 1, 0)
+                    enter_name(volume_music, volume_game, 1)
                 elif quit_button.checkforinput(mouse_position):
                     click_sound.play()
                     pg.quit()
@@ -779,6 +793,116 @@ def main_menu(volume_music, volume_game):
                     click_sound.play()
                     background_music.stop()
                     select_level_window(volume_music, volume_game)
+                elif ranking_button.checkforinput(mouse_position):
+                    click_sound.play()
+                    background_music.stop()
+                    ranking(volume_music, volume_game)
         pg.display.update()
 
-main_menu(0.05, 0.2)
+def enter_name(volume_music, volume_game, level):
+    #Image
+    background_image_main_menu = pg.image.load(r"img\background\backgroundimage_main_menu.jpg")
+    background_image_main_menu = pg.transform.scale(background_image_main_menu, (width_window, height_window))
+
+    #Sounds
+    click_sound = pg.mixer.Sound(r"sounds\click_sound.mp3")
+    background_sound = pg.mixer.Sound(r"sounds\main_menu_sound.mp3")
+
+    font = pg.font.Font(None, 36)
+
+    ranking_text = font.render("NAME", True, "#b68f40")
+    ranking_rect = ranking_text.get_rect(center=(width_window / 2, 110))
+
+    enter_name_text = pg.font.Font(None, 30).render("ENTER YOUR NAME AND PRESS ENTER:", True, "white")
+    enter_name_rect = enter_name_text.get_rect(topleft=(50, 280))
+
+
+    pg.display.set_caption("Enter your name")
+    background_sound.play()
+    while True:
+        click_sound.set_volume(volume_game)
+        background_sound.set_volume(volume_music)
+        screen.blit(background_image_main_menu, (0,0))
+
+        # Obtener la entrada del usuario
+        input_box = pg.Rect(480, 276, 200, 30)
+        color_inactive = pg.Color('white')
+        color = color_inactive
+        text = ''
+        
+        while True:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == pg.KEYDOWN:
+                        if event.key == pg.K_RETURN:
+                            ranking_dict[text.upper()] = 0
+                            click_sound.play()
+                            background_sound.stop()
+                            play_game(volume_music, volume_game, level, 0)
+                        elif event.key == pg.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
+
+            txt_surface = font.render(text, True, color)
+            screen.blit(txt_surface, (input_box.x, input_box.y))
+            screen.blit(ranking_text, ranking_rect)
+            screen.blit(enter_name_text, enter_name_rect)
+
+            pg.display.flip()
+
+def ranking(volume_music, volume_game):
+    #Image
+    background_image_main_menu = pg.image.load(r"img\background\backgroundimage_main_menu.jpg")
+    background_image_main_menu = pg.transform.scale(background_image_main_menu, (width_window, height_window))
+
+    background_image_ranking = pg.image.load(r"img\background\Ranking.png")
+    background_image_ranking = pg.transform.scale(background_image_ranking, ((background_image_ranking.get_width() / 3), (background_image_ranking.get_height() / 3)))
+    background_image_raking_pause = background_image_ranking.get_rect()
+    background_image_raking_pause.center = (width_window / 2, (height_window / 2) - 10)
+
+
+
+    #Sounds
+    click_sound = pg.mixer.Sound(r"sounds\click_sound.mp3")
+    background_music = pg.mixer.Sound(r"sounds\main_menu_sound.mp3")
+
+    font = pg.font.Font(None, 30)
+
+
+    game_name_text = font.render("VIKINGS OF THE FUTURE", True, "#b68f40")
+    rect_game_name = game_name_text.get_rect(center=(width_window / 2, 45))
+
+    pg.display.set_caption("Enter your name")
+    background_music.play()
+    while True:
+        click_sound.set_volume(volume_game)
+        background_music.set_volume(volume_music)
+        mouse_position = pg.mouse.get_pos()
+        return_to_main_menu_button = Button(image=None, pos=(width_window / 2,513), text_input="RETURN TO MAIN MENU", font=font, base_color="grey", hovering_color="White")
+
+
+        screen.blit(background_image_main_menu, (0,0))
+        screen.blit(background_image_ranking, background_image_raking_pause)
+        screen.blit(game_name_text, rect_game_name)
+
+        for button in [return_to_main_menu_button]:
+            button.changecolor(mouse_position)
+            button.update(screen)
+        
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if return_to_main_menu_button.checkforinput(mouse_position):
+                    click_sound.play()
+                    background_music.stop()
+                    main_menu(volume_music, volume_game)
+
+        pg.display.update()
+
+
+main_menu(0.0, 0.0)
