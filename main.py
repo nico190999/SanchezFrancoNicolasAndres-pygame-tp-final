@@ -7,7 +7,8 @@ from platform1 import Platform
 from coin import Coin
 from button import Button
 from saw import Saw
-
+from bigboss import Bigboss
+import random
 #Para inicializar el juego
 pg.init()
 
@@ -372,24 +373,14 @@ def play_game(volume_music, volume_game, level, score):
                         Saw(x=saw_seven["x"], y=saw_seven["y"]),
                         Saw(x=saw_eight["x"], y=saw_eight["y"]),
                         ]
-        
-        #Enemy
-        common_height_and_width = json_level["enemies"]["common_height_and_width"]
-        common_speed_walk = json_level["enemies"]["common_speed_walk"]
-        common_gravity = json_level["enemies"]["common_gravity"]
-        enemy_one = json_level["enemies"]["enemy_one"]
-        enemy_two = json_level["enemies"]["enemy_two"]
-        enemies = pg.sprite.Group(
-            (Enemy(x=enemy_one["x"], y=enemy_one["y"], speed_walk=common_speed_walk, gravity=common_gravity,
-            width_player=common_height_and_width, height_player=common_height_and_width, 
-            life_bar_path=r"img\life bar\0.png", volume_game=volume_game, 
-            volume_music=volume_music)),
 
-            (Enemy(x=enemy_two["x"], y=enemy_two["y"], speed_walk=common_speed_walk, gravity=common_gravity, 
-            width_player=common_height_and_width, height_player=common_height_and_width, 
+        enemies = pg.sprite.Group()
+
+        #Bigboss
+        big_boss = pg.sprite.Group(Bigboss(x=0, y=380, speed_walk=0.8, gravity=8,
+            width_player=200, height_player=200, 
             life_bar_path=r"img\life bar\0.png", volume_game=volume_game, 
             volume_music=volume_music))
-        )
     ###########################################################################################################
 
     #Sounds
@@ -494,8 +485,13 @@ def play_game(volume_music, volume_game, level, score):
             enemy.update(main_player, platforms_list, volume_game)
             enemy.draw(screen)
 
+        if level == 3:
+            for boss in big_boss:
+                boss.update(main_player, platforms_list, volume_game)
+                boss.draw(screen)
+
         #Main Player
-        main_player.update(platforms_list, coin_list, saw_trap_list, enemies) #Cada cuanto queremos que se vaya actualizando, si aumenta el delta, aumenta la velocidad
+        main_player.update(platforms_list, coin_list, saw_trap_list) #Cada cuanto queremos que se vaya actualizando, si aumenta el delta, aumenta la velocidad
         main_player.draw(screen) #Para dibujar al personaje en el juego
 
         #Detección de nivel perdido
@@ -519,6 +515,38 @@ def play_game(volume_music, volume_game, level, score):
                         enemies.remove(enemy)
                         sound_enemy_hurted.play()
                         main_player.points += 50
+        
+        #Detección de balas de jugador contra enemigo, por cada disparo le resta vida, si llega a 3, desaparece.
+        if level == 3:
+            for bullet in main_player.bullet_group:
+                for boss in big_boss:
+                    if bullet.rect.colliderect(boss.rect):
+                        bullet.kill()
+                        boss.hit_counter += 1
+                        sound_enemy_hurted.play()
+                        if boss.hit_counter == 3:
+                            boss.life_bar_path = r"img\life bar\1.png"
+                            enemies.add(Enemy(x=random.randint(10, 900), y=440, speed_walk=0.6, gravity=8,
+                                        width_player=120, height_player=120, 
+                                        life_bar_path=r"img\life bar\0.png", volume_game=volume_game, 
+                                        volume_music=volume_music))
+                        elif boss.hit_counter == 6:
+                            boss.life_bar_path = r"img\life bar\2.png"
+                            enemies.add(Enemy(x=random.randint(10, 900), y=440, speed_walk=0.6, gravity=8,
+                                        width_player=120, height_player=120, 
+                                        life_bar_path=r"img\life bar\0.png", volume_game=volume_game, 
+                                        volume_music=volume_music))
+                        elif boss.hit_counter == 9:
+                            boss.life_bar_path = r"img\life bar\3.png"
+                            enemies.add(Enemy(x=random.randint(10, 900), y=440, speed_walk=0.6, gravity=8,
+                                        width_player=120, height_player=120, 
+                                        life_bar_path=r"img\life bar\0.png", volume_game=volume_game, 
+                                        volume_music=volume_music))
+                        elif boss.hit_counter == 10:
+                            boss.is_alive = False
+                            big_boss.remove(boss)
+                            sound_enemy_hurted.play()
+                            main_player.points += 200
 
         #Detección de balas de enemigo contra jugador, por cada disparo le resta vida, si llega a 3, se termina el juego.
         for enemy in enemies:
@@ -529,6 +557,15 @@ def play_game(volume_music, volume_game, level, score):
                     sound_main_player_hurted.play()
                     if main_player.hit_counter < 3:
                         main_player.life_bar_path = r"img\life bar\{}.png".format(str(main_player.hit_counter))
+        if level == 3:
+            for boss in big_boss:
+                for bullet in boss.bullet_group:
+                    if bullet.rect.colliderect(main_player.rect):
+                            bullet.kill()
+                            main_player.hit_counter += 1
+                            sound_main_player_hurted.play()
+                            if main_player.hit_counter < 3:
+                                main_player.life_bar_path = r"img\life bar\{}.png".format(str(main_player.hit_counter))
 
         pg.display.flip() #Para que el jugador aparezca, sin esta función no aparece por pantalla
         screen.blit(background_image, background_image.get_rect())
@@ -854,6 +891,7 @@ def enter_name(volume_music, volume_game, level):
             pg.display.flip()
 
 def ranking(volume_music, volume_game):
+    font = pg.font.Font(None, 30)
     #Image
     background_image_main_menu = pg.image.load(r"img\background\backgroundimage_main_menu.jpg")
     background_image_main_menu = pg.transform.scale(background_image_main_menu, (width_window, height_window))
@@ -863,13 +901,49 @@ def ranking(volume_music, volume_game):
     background_image_raking_pause = background_image_ranking.get_rect()
     background_image_raking_pause.center = (width_window / 2, (height_window / 2) - 10)
 
+    ordered_dict = {k: v for k, v in sorted(ranking_dict.items(), key=lambda item: item[1], reverse=True)}
+
+    first_key = list(ordered_dict.keys())[0]
+    first_value = ordered_dict[first_key]
+
+    second_key = list(ordered_dict.keys())[1]
+    second_value = ordered_dict[second_key]
+
+    third_key = list(ordered_dict.keys())[2]
+    third_value = ordered_dict[third_key]
+
+    fourth_key = list(ordered_dict.keys())[3]
+    fourth_value = ordered_dict[fourth_key]
+
+    first_name_player_text = pg.font.Font(None, 25).render(f"{first_key}", True, "black")
+    first_name_player_rect = first_name_player_text.get_rect(topleft=(400, 150))
+
+    first_score_player_text = pg.font.Font(None, 25).render(f"{first_value}", True, "black")
+    first_score_player_rect = first_score_player_text.get_rect(topleft=(550, 150))
+
+    second_name_player_text = pg.font.Font(None, 25).render(f"{second_key}", True, "black")
+    second_name_player_rect = second_name_player_text.get_rect(topleft=(400, 230))
+
+    second_score_player_text = pg.font.Font(None, 25).render(f"{second_value}", True, "black")
+    second_score_player_rect = second_score_player_text.get_rect(topleft=(550, 230))
+
+    third_name_player_text = pg.font.Font(None, 25).render(f"{third_key}", True, "black")
+    third_name_player_rect = third_name_player_text.get_rect(topleft=(400, 310))
+
+    third_score_player_text = pg.font.Font(None, 25).render(f"{third_value}", True, "black")
+    third_score_player_rect = third_score_player_text.get_rect(topleft=(550, 310))
+
+    fourth_name_player_text = pg.font.Font(None, 25).render(f"{fourth_key}", True, "black")
+    fourth_name_player_rect = fourth_name_player_text.get_rect(topleft=(400, 390))
+
+    fourth_score_player_text = pg.font.Font(None, 25).render(f"{third_value}", True, "black")
+    fourth_score_player_rect = fourth_score_player_text.get_rect(topleft=(550, 390))
+
 
 
     #Sounds
     click_sound = pg.mixer.Sound(r"sounds\click_sound.mp3")
     background_music = pg.mixer.Sound(r"sounds\main_menu_sound.mp3")
-
-    font = pg.font.Font(None, 30)
 
 
     game_name_text = font.render("VIKINGS OF THE FUTURE", True, "#b68f40")
@@ -887,6 +961,15 @@ def ranking(volume_music, volume_game):
         screen.blit(background_image_main_menu, (0,0))
         screen.blit(background_image_ranking, background_image_raking_pause)
         screen.blit(game_name_text, rect_game_name)
+        screen.blit(first_name_player_text, first_name_player_rect)
+        screen.blit(second_name_player_text, second_name_player_rect)
+        screen.blit(third_name_player_text, third_name_player_rect)
+        screen.blit(fourth_name_player_text, fourth_name_player_rect)
+
+        screen.blit(first_score_player_text, first_score_player_rect)
+        screen.blit(second_score_player_text, second_score_player_rect)
+        screen.blit(third_score_player_text, third_score_player_rect)
+        screen.blit(fourth_score_player_text, fourth_score_player_rect)
 
         for button in [return_to_main_menu_button]:
             button.changecolor(mouse_position)
@@ -905,4 +988,4 @@ def ranking(volume_music, volume_game):
         pg.display.update()
 
 
-main_menu(0.0, 0.0)
+main_menu(0.0, 0.3)

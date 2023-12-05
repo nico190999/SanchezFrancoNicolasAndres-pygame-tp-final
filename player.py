@@ -190,7 +190,7 @@ class Player:
                     break
         return bool_return
 
-    def update(self, platform_list, coin_list, saw_trap_list, enemies):
+    def update(self, platform_list, coin_list, saw_trap_list):
         self.bullet_group.update()
         self.image_life_bar = pg.image.load(self.life_bar_path)
         self.image_life_bar = pg.transform.scale(self.image_life_bar, (802 / 9, 53 / 5))
